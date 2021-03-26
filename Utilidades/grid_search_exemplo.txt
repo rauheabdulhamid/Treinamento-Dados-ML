@@ -1,0 +1,17 @@
+maxdepth = [2,5,10,20]
+    max_minspleaf = int(n_gs/2)
+    minsamplesleaf = [2,5,10,100,max_minspleaf]
+    criterions = ['gini','entropy']
+    #---------- Testes Manuais ------------------
+    # maxdepth = [5]
+    # max_minspleaf = int(n_gs/2)
+    # minsamplesleaf = [5]
+    # criterions = ['gini']
+    #--------------------------------------------
+
+    param_grid = {'max_depth': maxdepth, 'min_samples_leaf' : minsamplesleaf,'criterion':criterions}
+    qt_modelos = nfolds*len(maxdepth)*len(minsamplesleaf)*len(criterions)
+        
+    # print('Aguarde, estimando ',qt_modelos,'modelos')
+    
+    grid_search = GridSearchCV(DecisionTreeClassifier(), param_grid, cv=nfolds,verbose=1,n_jobs=n_jobs_gs,scoring='roc_auc',pre_dispatch=pre_dispatch_gs)

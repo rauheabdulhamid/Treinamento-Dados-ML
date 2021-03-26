@@ -1,0 +1,21 @@
+        from sklearn.ensemble import GradientBoostingClassifier, RandomForestClassifier
+        from sklearn.tree import DecisionTreeClassifier
+        from sklearn.feature_selection import SelectFromModel
+        from collections import OrderedDict
+        x = abt_input.drop(['target_t_bin'], axis=1)
+        y = abt_input['target_t_bin']
+        feat_labels = x.columns
+
+        #-------------------- Gradient Boosting --------------------------------
+            mod_aux = 'GradientBoostingClassifier'
+            gbk = GradientBoostingClassifier(n_estimators=100,max_depth=3)
+            gbk.fit(x, y)
+            sfm = SelectFromModel(gbk, threshold='mean', prefit=True)
+            df = pd.DataFrame(OrderedDict({'Variaveis':x.columns,'Importancia':gbk.feature_importances_}))
+            df=df.sort_values(['Importancia'] , ascending = False )
+            df = df.round({'Importancia':3})
+            df = df[df.Importancia != 0]
+            imp = df
+            imp = imp.set_index('Variaveis')
+            n_features = sfm.transform(x).shape[1]
+            selected_vars = list(feat_labels[sfm.get_support()]) 
